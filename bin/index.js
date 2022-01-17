@@ -47,6 +47,8 @@ const argv = yargs
   .version()
   .argv;
 
+console.log(argv);
+
 const currentPath = process.cwd();
 let distFolder = path.resolve(currentPath, argv.dist);
 let metaFile = path.resolve(currentPath, argv.dir, 'meta.json');
@@ -106,6 +108,7 @@ metaJson.forEach(icon => {
   const oldFile = path.join(svgFolder, `${icon.name}.svg`);
   if (fs.existsSync(oldFile)) {
     fs.renameSync(oldFile, newFile);
+    console.log('Renamed: ', newFile);
   } else {
     errors.push(`Invalid icon at "${oldFile}"`)
   }
@@ -310,8 +313,9 @@ function getConfig() {
     fontName,
     version
   } = fontBuildJson;
+  const svgFiles = metaJson.map(m => `${svgFolder}/u${m.codepoint}-${m.name}.svg`)
   const config = {
-    files: `${svgFolder}/*.svg`,
+    files: svgFiles,
     fontName,
     formats: formats,
     fontHeight: 512,
